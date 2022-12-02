@@ -27,6 +27,10 @@
 *.lib
 
 # Executables
-*.exe
 *.out
 *.app
+/MethodPomodoro/x64
+/x64/Debug
+*.pdb
+*.user
+/.vs/MethodPomodoro
