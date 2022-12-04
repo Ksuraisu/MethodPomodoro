@@ -6,7 +6,7 @@ using namespace std;
 
 static int runtime_tomatoCount = 0;
 
-static enum color { darkblue = 1, green, lightblue, red, purple, orange, grey, darkgrey, blue, lightgreen, turquoise, lightred, lightpurple, yellow, white, END_OF_COLOR };
+enum color { darkblue = 1, green, lightblue, red, purple, orange, grey, darkgrey, blue, lightgreen, turquoise, lightred, lightpurple, yellow, white, END_OF_COLOR };
 string rusColor[]{ "Темно-синий", "Зеленый", "Голубой", "Красный", "Фиолетовый", "Оранжевый", "Серый", "Темно-серый", "Синий", "Светло-зеленый", "Бирюзовый", "Светло-красный", "Светло-фиолетовый", "Желтый", "Белый" };
 
 //int total_tomatoCount, int colorConsole, "bool" animation on/off 
@@ -43,7 +43,7 @@ void acout(string whatToAnimate, bool endLine = true, int delay = stats[2]) {
 
 void changeColor();
 
-void tomatoMethod();
+void tomatoMethod(bool skipToMenu);
 
 void timerForRest() {
 	int seconds;
@@ -59,7 +59,6 @@ void timerForRest() {
 		cout << seconds % 60 << 'c';
 	}
 }
-
 void timerForWork(bool fiveMinutes = false) {
 	int seconds;
 	if (fiveMinutes) seconds = 1200;
@@ -83,9 +82,8 @@ int main() {
 	setlocale(LC_ALL, "ru-RU");
 	read();
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	/*При запуске программы в VS 2022 текст изначально черный,
-	однако при запуске программы из проводника, всё работает как надо*/
-	SetConsoleTextAttribute(hConsole, stats[1]);
+	color consoleColor = static_cast<color>(stats[1]);
+	SetConsoleTextAttribute(hConsole, consoleColor);
 	CUI();
 	save();
 	return 0;
@@ -136,7 +134,7 @@ void CUI() {
 		stats[0] += runtime_tomatoCount;
 		return;
 	case 1:
-		tomatoMethod();
+		tomatoMethod(false);
 		CUI();
 		break;
 	case 2:
@@ -156,9 +154,10 @@ void CUI() {
 	return;
 }
 
-void tomatoMethod() {
+void tomatoMethod(bool skipToMenu) {
 	system("cls");
 	timerForWork();
+	system("cls");
 
 	acout("Время работы окончено. Выберите дальнейший план действий: ");
 	acout("0 - Выход в главное меню");
@@ -186,25 +185,25 @@ void tomatoMethod() {
 		timerForRest();
 		system("cls");
 		timerForWork();
-		tomatoMethod();
+		tomatoMethod(true);
 		break;
 	case 2:
 		timerForWork(true);
+		tomatoMethod(true);
 		break;
 	case 3:
 		timerForWork();
-		tomatoMethod();
+		tomatoMethod(true);
 		break;
 	default:
 		errNNFL();
-		tomatoMethod();
+		tomatoMethod(true);
 		break;
 	}
 	return;
 }
 
 void changeColor() {
-	color consoleColor;
 	color endOfEnum = END_OF_COLOR;
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
